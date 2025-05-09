@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dhaka Sentinel-2 Visualizations</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #map { height: 600px; margin-top: 10px; }
+    label, select { margin-right: 10px; }
+  </style>
+</head>
+<body>
+
+  <h2>Dhaka Sentinel-2 Visualizations</h2>
+
+  <label for="year">Year:</label>
+  <select id="year">
+    <option value="2018">2018</option>
+    <option value="2019">2019</option>
+    <option value="2020">2020</option>
+    <option value="2021">2021</option>
+    <option value="2022">2022</option>
+    <option value="2023">2023</option>
+  </select>
+
+  <label for="type">Layer:</label>
+  <select id="type">
+    <option value="truecolor">True Color</option>
+    <option value="ndvi">NDVI</option>
+    <option value="ndwi">NDWI</option>
+  </select>
+
+  <button onclick="updateLayer()">Load Layer</button>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([23.76, 90.45], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var currentOverlay = null;
+
+    function updateLayer() {
+      var year = document.getElementById('year').value;
+      var type = document.getElementById('type').value;
+      var filename = `assets/${year}/dhaka_${type}_${year}.png`;
+
+      if (currentOverlay) {
+        map.removeLayer(currentOverlay);
+      }
+
+      currentOverlay = L.imageOverlay(filename, [[23.65, 90.35], [23.85, 90.55]]);
+      currentOverlay.addTo(map);
+    }
+
+    // Load default view
+    updateLayer();
+  </script>
+</body>
+</html>
